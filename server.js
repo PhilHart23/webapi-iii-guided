@@ -14,6 +14,7 @@ server.use(helmet());
 server.use(morgan('dev'));
 
 server.use(teamNamer);
+
 // server.use(moodyGateKeeper);
 
 // server.use((req, res) => {
@@ -24,7 +25,7 @@ server.use(teamNamer);
 
 server.use('/api/hubs', restricted, only('frodo'), hubsRouter);
 
-server.get('/',  (req, res, next) => {
+server.get('/', restricted, (req, res, next) => {
   res.send(`
     <h2>Lambda Hubs API</h2>
     <p>Welcome ${req.team} to the Lambda Hubs API</p>
@@ -36,7 +37,7 @@ server.use(errorHandler);
 function teamNamer(req, res, next) {
   req.team = 'WEB17 Homies'
 
-// If we don't call next the request will hanf and time out. 
+// If we don't call next the request will hang and time out. 
   next() // Calling next continues to the next middleware/route handler
 }
 
@@ -45,7 +46,7 @@ function moodyGateKeeper(req, res, next) {
   const seconds = new Date().getSeconds();
 
   if (seconds % 3 === 0) {
-    res.status(403).json({ you: 'shall not pass!' })
+    res.status(403).json({ you: 'Shall not pass!' })
   } else {
     next()
   }
@@ -87,7 +88,7 @@ function only(name) {
 function errorHandler(error, req, res, next) {
   // here you could inspect the errror and decide how to respond
 
-  res.status(400).json({ message: 'NO NO NO NO!!!!!!!', error })
+  res.status(400).json({ message: 'Check out the error below!', error })
 }
 
 
